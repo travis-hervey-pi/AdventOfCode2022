@@ -62,6 +62,8 @@
                 {"Z", 52 }
             };
             var total = 0;
+            var group = new List<List<char>>();
+            var total2 = 0;
             foreach (var bag in data)
             {
                 var len = bag.Length;
@@ -71,9 +73,25 @@
                 var result = compartment1.ToList().Intersect(compartment2.ToList());
                 Console.WriteLine($"{result.First().ToString()}");
                 total += lookup[result.First().ToString()];
+
+                group.Add(bag.ToList());
+
+                if(group.Count() == 3)
+                {
+                    var commonItem = group
+                        .Aggregate(
+                            new HashSet<char>(group.First()),
+                            (h,e) => { h.IntersectWith(e); return h; }
+                        );
+
+                    total2 += lookup[commonItem.First().ToString()];
+                    group = new List<List<char>>();
+                }
+
             }
 
             Console.WriteLine(total);
+            Console.WriteLine(total2);
             Console.ReadKey();
         }
     }
